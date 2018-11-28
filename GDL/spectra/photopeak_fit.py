@@ -21,7 +21,7 @@ def ll_func(data, lims):
         constraints = np.array([(p<0).any(), x[0]<0, x[1]<0, x[2]<-slim, x[2]>slim])
 
         if constraints.any():
-            return np.inf
+            return 1e20
         else:
             return -np.log(p).sum()
 
@@ -141,10 +141,10 @@ def pkfit(data, lims, x0='def'):
 
     ll, cov = ll_func(E, [a, b])
 
-    if x0=='def': x0 = np.array([len(E), len(E), 0, np.mean(E), np.std(E)])
+    if type(x0)=='str': x0 = np.array([len(E), len(E), 0, np.mean(E), np.std(E)])
 
     res = minimize(ll, x0, method='powell',
-                    options={'disp':True, 'maxiter':1e3})
+                    options={'disp':True, 'ftol':1e-15 , 'maxiter':1e2})
 
     return res, cov(res.x)
 
@@ -155,15 +155,15 @@ def pkpdf(E, x, lims):
     c, r = (a+b)/2., 1/(b-a)
 
     def pdf(x):
-        f = x[0]
-        return f*fs(x) + (1-f)*fb(x)
+        mus, mub = x[0], x[1]
+        return mus/(mus+mub)*fs(x) + mub/(mus+mub)*fb(x)
 
     def fb(x):
-        s = x[1]
+        s = x[2]
         return s*(E-c) + r
 
     def fs(x):
-        mu, sig = x[2], x[3]
+        mu, sig = x[3], x[4]
         #A, _ = quad(gauss, a, b, args=(mu, sig))
         A = sig*(2*np.pi)**(1/2.)
         return (1/A)*gauss(E, mu, sig)
