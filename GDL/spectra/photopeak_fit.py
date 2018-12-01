@@ -21,7 +21,7 @@ def ll_func(data, lims):
         constraints = np.array([(p<0).any(), x[0]<0, x[1]<0, x[2]<-slim, x[2]>slim])
 
         if constraints.any():
-            return 1e20
+            return np.inf
         else:
             return -np.log(p).sum()
 
@@ -133,16 +133,14 @@ def ll_func(data, lims):
     return ll, cov
 
 
-def pkfit(data, lims, x0='def'):
-    '''Given a set of data, this returns the ML estimates and covariance
-    matrix of a signal+background fit'''
+def pkfit(data, lims, x0):
+    '''data: energy values (np.array);
+       lims: lower and upper bounds (np.array);
+       x0:   fitting guess (np.array)'''
     E=data
     a, b = lims
 
     ll, cov = ll_func(E, [a, b])
-
-    if type(x0)=='str': x0 = np.array([len(E), len(E), 0, np.mean(E), np.std(E)])
-
     res = minimize(ll, x0, method='powell',
                     options={'disp':True, 'ftol':1e-15 , 'maxiter':1e2})
 

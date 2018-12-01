@@ -1,11 +1,11 @@
 ##PBS options
 
-#PBS -N blobcalc
+#PBS -N {run}_R{R}
 #PBS -q long
 #PBS -M gonzalodiazlopez10@gmail.com
 #PBS -m bae
-#PBS -o /data5/users/gdiaz/blobcalc/blobcalc.log
-#PBS -e /data5/users/gdiaz/blobcalc/blobcalc.err
+#PBS -o /data5/users/gdiaz/blobcalc/res.log
+#PBS -e /data5/users/gdiaz/blobcalc/err.err
 
 echo Current directory : $PWD
 
@@ -22,14 +22,13 @@ export PYTHONPATH=$ICTDIR
 export PATH=$ICTDIR/bin:$PATH
 
 export IC_DATA="/data5/users/gdiaz/DATA"
-export CSTHDIR="/data5/users/gdiaz/Software/CsTh"
-export KRCALIB="/data5/users/gdiaz/Software/KrCalib"
-export PYTHONPATH=$CSTHDIR:$KRCALIB:$PYTHONPATH
+export ICAROSDIR="/data5/users/gdiaz/Software/ICAROS"
+export PYTHONPATH=$ICAROSDIR:$PYTHONPATH
 
 echo Date: $(date)
 
 cd /data5/users/gdiaz/blobcalc
 
-time python blobcalc.py -r 6206 -ty Tlds -cd ../Corrections/6206 -pd ../event_selection/DATA/6206/pmaps/ -El 390000 410000 -tg {tag} -rf {rx} {ry} -zd {zd} -R {R}
+time python blobcalc.py -r {run} -cf {cfnam} -pd {pdir} -tg {tag} -kr /data5/users/gdiaz/DATA/maps/ -El {Ea} {Eb} -R {R}
 
 echo Date: $(date)
