@@ -3,21 +3,22 @@ import numpy             as np
 import pandas            as pd
 import tables            as tb
 
+from invisible_cities.io.pmaps_io import load_pmaps_as_df
 
 import os
 import sys
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i" , "--indir"     , type=str, help="pmapdir")
-parser.add_argument("-n" , "--file_range", type=list, help="file range")
-parser.add_argument("-o"  , "--out"      , type=str, help="outdir")
+parser.add_argument("-i" , "--indir"       , type=str , help="pmapdir")
+parser.add_argument("-r" , "--nfiles_range", type=int,  help="file range", nargs=2)
+parser.add_argument("-o"  , "--out"        , type=str , help="outdir")
 
 args = parser.parse_args(sys.argv[1:])
 
 pmapdir     = args.indir
-pmap_range  = args.files_range
-outfilename = args.out
+pmap_range  = args.nfiles_range
+outfile     = args.out
 
 
 def create_and_fill_summary_file(pmapdir, outfile, pmap_range, sldcut = 100):

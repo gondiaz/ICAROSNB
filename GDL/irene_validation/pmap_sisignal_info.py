@@ -6,7 +6,6 @@ from invisible_cities.io.pmaps_io import load_pmaps_as_df
 
 to_df = pd.DataFrame.from_records
 
-
 import os
 import sys
 import argparse
